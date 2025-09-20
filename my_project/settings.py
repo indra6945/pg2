@@ -52,16 +52,22 @@ TEMPLATES = [
 WSGI_APPLICATION = 'my_project.wsgi.application'
 
 # Database (Render uses DATABASE_URL, fallback to SQLite locally)
-DATABASE_URL = os.environ.get("DATABASE_URL")
-if DATABASE_URL:
+if os.environ.get("RENDER") == "TRUE":  # Render sets an environment variable
     DATABASES = {
-        "default": dj_database_url.parse(DATABASE_URL, conn_max_age=600, ssl_require=True)
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get('POSTGRES_DB'),
+            'USER': os.environ.get('POSTGRES_USER'),
+            'PASSWORD': os.environ.get('POSTGRES_PASSWORD'),
+            'HOST': os.environ.get('POSTGRES_HOST'),
+            'PORT': os.environ.get('POSTGRES_PORT', '5432'),
+        }
     }
 else:
     DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / "db.sqlite3",
         }
     }
 
