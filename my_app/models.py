@@ -12,7 +12,7 @@ class OTP(models.Model):
     def is_expired(self):
         return timezone.now() > self.created_at + timedelta(minutes=10)
 
-
+#----------------- Stores reminders on dates----------------------------
 class Task(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)

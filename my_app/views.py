@@ -17,8 +17,8 @@ from .forms import EmailForm, OTPForm, TaskForm, DocumentForm
 from django.contrib import messages
 
 # Dummy data for jobs and schemes
-DUMMY_SCHEMES = [f"Scheme {i}" for i in range(1, 61)]
-DUMMY_JOBS = [f"Job {i}" for i in range(1, 61)]
+DUMMY_SCHEMES = [f"Scheme {i}" for i in range(1,83)]
+DUMMY_JOBS = [f"Job {i}" for i in range(1,51)]
 
 # Helper function to create calendar reminders
 def create_calendar_reminder(user, title, date):
