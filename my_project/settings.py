@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 # =======================
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Load environment variables from .env (only works locally, Render ignores this)
+# Load environment variables from .env (only for local)
 load_dotenv()
 
 # =======================
@@ -17,7 +17,7 @@ load_dotenv()
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "unsafe-secret-key")
 DEBUG = os.environ.get("DEBUG", "True") == "True"
 
-# Render sets this automatically
+# Render sets hostname automatically
 RENDER_HOSTNAME = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
 ALLOWED_HOSTS = (
     [RENDER_HOSTNAME] if RENDER_HOSTNAME else ['.onrender.com', 'localhost', '127.0.0.1']
@@ -33,7 +33,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'my_app',  # replace with your app name(s)
+    'my_app',  # your app
 ]
 
 # =======================
@@ -50,7 +50,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'my_project.urls'  # replace with your project name
+ROOT_URLCONF = 'my_project.urls'
 
 # =======================
 # Templates
@@ -70,8 +70,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'my_project.wsgi.application'  # replace with your project name
-ASGI_APPLICATION = 'my_project.asgi.application'  # if you’re using ASGI
+WSGI_APPLICATION = 'my_project.wsgi.application'
+ASGI_APPLICATION = 'my_project.asgi.application'  # optional if you use ASGI
 
 # =======================
 # Database
@@ -83,7 +83,7 @@ DATABASES = {
     )
 }
 
-# Force SSL only if Postgres (Render)
+# SSL only for Postgres (Render)
 if DATABASES['default']['ENGINE'] == 'django.db.backends.postgresql':
     DATABASES['default']['OPTIONS'] = {'sslmode': 'require'}
 
@@ -125,14 +125,19 @@ MEDIA_ROOT = BASE_DIR / 'media'
 LOGIN_URL = '/login/'
 
 # =======================
-# Email
+# =======================
+# Email (works local + render)
 # =======================
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = 'smtp.gmail.com'  # or smtp-relay.brevo.com if you use Brevo
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+
+# These must be set in environment (.env locally, Render → Dashboard → Environment Variables)
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
 
 # =======================
 # Default PK field
