@@ -183,15 +183,42 @@ def calendar_view(request):
 
 # Login and OTP
 def send_otp_email(user):
+    # Generate OTP
     otp = f"{random.randint(100000, 999999)}"
-    OTP.objects.update_or_create(user=user, defaults={"otp_code": otp, "created_at": timezone.now()})
-    send_mail(
-        subject='Your OTP Code',
-        message=f'Hi {user.username},\n\nYour OTP for login is: {otp}\n\nThis will expire in 10 minutes.',
-        from_email='youremail@gmail.com',
-        recipient_list=[user.email],
-        fail_silently=False,
+    OTP.objects.update_or_create(
+        user=user, 
+        defaults={"otp_code": otp, "created_at": timezone.now()}
     )
+    
+    try:
+        # Use Django's settings for email configuration
+        from django.core.mail import send_mail
+        from django.conf import settings
+        
+        send_mail(
+            subject='Your OTP Code for PG2 Portal',
+            message=f'''
+Hello {user.email},
+
+Your OTP for login is: {otp}
+
+This OTP will expire in 10 minutes.
+
+If you didn't request this, please ignore this email.
+
+Best regards,
+PG2 Team
+            ''',
+            from_email=settings.DEFAULT_FROM_EMAIL,  # Use configured email
+            recipient_list=[user.email],  # Send to user's entered email
+            fail_silently=False,
+        )
+        print(f"OTP sent successfully to {user.email}")
+        return True
+    except Exception as e:
+        print(f"Error sending email to {user.email}: {e}")
+        # Fallback: You might want to handle this gracefully
+        return False
 
 def login_request(request):
     if request.method == 'POST':
