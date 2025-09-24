@@ -8,4 +8,8 @@ python manage.py runserver
 if any changes made in the code then->
     git add .
     git commit -m "css changed"
+<<<<<<< HEAD
     git push origin main
+=======
+    git push origin main
+>>>>>>> d41d978d4e0e10978445befba30e985e814265e5
